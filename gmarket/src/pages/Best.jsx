@@ -6,6 +6,7 @@ import { BestDummyData } from "../data/BestDummyData";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 const Best = () => {
+  const [{ categoryData = [], item = [] } = {}] = BestDummyData;
   const [activeIdx, setActiveIdx] = useState(0);
   return (
     <div id="container">
@@ -51,7 +52,7 @@ const Best = () => {
                 spaceBetween={0}
                 slidesPerView="auto"
               >
-                {BestDummyData[0].categoryData.map((item, idx) => (
+                {categoryData.map((item, idx) => (
                   <SwiperSlide>
                     <BestCategoryItem
                       item={item}
@@ -159,7 +160,7 @@ const Best = () => {
             </div>
           </div>
           <ul className="list__best">
-            {BestDummyData[0].item.map((item, idx) => (
+            {item.map((item, idx) => (
               <ItemCard item={item} key={idx} idx={idx} />
             ))}
           </ul>

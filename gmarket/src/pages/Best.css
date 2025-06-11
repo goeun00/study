@@ -166,8 +166,52 @@
     }
   }
 }
+@media screen and (max-width: 1132px) {
+  .service__best {
+    .list__best {
+      width: 100%;
+      gap: 16px;
+      padding: 16px;
+      .list-item {
+        margin-right: 0;
+        width: calc(50% - 8px);
+        .box__thumbnail {
+          width: 100%;
+          margin: 0 auto;
+          height: 0;
+          padding-top: 100%;
+          position: relative;
+          .image {
+            top: 0;
+            left: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+          }
+        }
+        &:first-child {
+          width: 100%;
+          text-align: center;
+          .box__thumbnail {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            padding-top: 0;
+            .box__label-rank {
+              text-indent: -9999px;
+              background-image: url(https://script.gmarket.co.kr/starro/mobile/images/single/best/gds-trophy-fill.svg);
+              width: 48px;
+              height: 48px;
+              overflow: hidden;
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
-@media screen and (min-width: 1028px) {
+@media screen and (min-width: 1132px) {
   .box__header {
     display: none;
   }
@@ -230,7 +274,6 @@
             display: block;
             margin-top: 12px;
             font-size: 14px;
-            color: var(--Gray-600);
             line-height: 20px;
             white-space: nowrap;
           }
