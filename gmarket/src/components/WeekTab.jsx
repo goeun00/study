@@ -15,15 +15,15 @@ const WeekTab = () => {
         Best
       </NavLink>
       <NavLink
-        to="/Week2"
+        to="/EMartMall"
         className={({ isActive }) =>
           `link__tab${isActive ? " link__tab--active" : ""}`
         }
       >
         <span className="material-symbols-outlined image__icon">
-          date_range
+          local_shipping
         </span>
-        Week<span className="text__num">2</span>
+        E-mart
       </NavLink>
     </div>
   );

@@ -1,6 +1,6 @@
 import "./Best.css";
 import { useState } from "react";
-import ItemCard from "../components/ItemCard";
+import ItemCard from "../components/BestItemCard";
 import BestCategoryItem from "../components/BestCategoryItem";
 import { BestDummyData } from "../data/BestDummyData";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,30 +11,6 @@ const Best = () => {
   return (
     <div id="container">
       <div className="service__best">
-        <div className="box__header box__header--border">
-          <div className="box__header-inner">
-            <div className="box__header-content">
-              <button type="button" className="button__back">
-                <span className="for-a11y">뒤로 가기</span>
-              </button>
-              <div className="box__header-title">
-                <h1 className="box__title">
-                  <a
-                    href="https://m.gmarket.co.kr/n/best"
-                    className="link__logo"
-                  >
-                    <span className="text">베스트</span>
-                  </a>
-                </h1>
-              </div>
-              <div className="box__header-menu">
-                <a href="//cart.gmarket.co.kr/ko/m/cart" className="link__cart">
-                  <span className="for-a11y">장바구니</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
         <div className="box__best-list">
           <div className="box__best-title">
             <h2 className="text__title">G마켓 베스트</h2>
@@ -50,7 +26,7 @@ const Best = () => {
               <Swiper
                 className="list__category-filter list__1depth-filter"
                 spaceBetween={0}
-                slidesPerView="auto"
+                slidesPerView={"auto"}
               >
                 {categoryData.map((item, idx) => (
                   <SwiperSlide>

@@ -1,54 +1,17 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
-.material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
-}
-html,
-body {
-  align-items: start;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  background: #fff;
-}
-.for-a11y,
-.forA11y {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-  clip: rect(0 0 0 0);
-  overflow: hidden;
-}
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-li {
-  list-style: none;
-}
-#root {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
 .box__weektab {
   display: flex;
   width: 100%;
   padding: 8px;
   background: #f0f4f9;
   font-family: "Pretendard Variable";
+  letter-spacing: -0.3px;
   .link__tab {
     font-size: 13px;
     text-align: center;
     color: #444746;
     vertical-align: top;
-    .text__num {
-      font-weight: bold;
-      margin-left: 2px;
-    }
+    font-weight: 600;
+
     .image__icon {
       font-size: 24px;
       display: block;

@@ -14,9 +14,13 @@
   .box__best-list {
     position: relative;
     .box__sub-category {
+      top: 0;
       .swiper-wrapper {
         display: flex;
       }
+    }
+    .swiper-slide {
+      width: auto;
     }
   }
   /* 아이템리스트 */
@@ -25,6 +29,7 @@
     flex-wrap: wrap;
     width: 1132px;
     margin: 12px auto 0;
+
     .list-item {
       width: 180px;
       margin-right: 58px;

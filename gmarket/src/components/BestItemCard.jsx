@@ -4,17 +4,12 @@ const getDiscountRate = (priceStr, discountStr) => {
   const rate = ((price - discount) / price) * 100;
   return `${Math.round(rate)}%`;
 };
-const ItemCard = ({ item, idx }) => {
+const BestItemCard = ({ item, idx }) => {
   return (
     <li className="list-item">
       <a
         href="http://item.gmarket.co.kr/Item?goodscode=2704155884"
         className="link"
-        data-montelena-acode="200000680"
-        data-montelena-categorycode="100000006"
-        data-montelena-goodsname="2024년산 어사명품 삼광쌀 10kg/특등급"
-        data-montelena-asn="1"
-        data-montelena-goodscode="2704155884"
       >
         <div className="box__thumbnail">
           <img
@@ -72,4 +67,4 @@ const ItemCard = ({ item, idx }) => {
     </li>
   );
 };
-export default ItemCard;
+export default BestItemCard;
