@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import AgreeListItem from "./AgreeListItem";
 import "./Agree.css";
 
@@ -8,39 +8,49 @@ const terms = [
   { id: 3, label: "마케팅 수신 동의(선택)", essential: false },
 ];
 
+// 체크박스 change케이스 reducer함수
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "TOGGLE_ITEM":
+      return {
+        ...state,
+        [action.id]: action.checked,
+      };
+    case "CHECK_ALL":
+      return Object.fromEntries(terms.map((term) => [term.id, action.checked]));
+    case "CHECK_ESSENTIAL":
+      return {
+        ...state,
+        ...Object.fromEntries(
+          terms
+            .filter((term) => term.essential)
+            .map((term) => [term.id, action.checked])
+        ),
+      };
+    default:
+      return state;
+  }
+};
+
 const Agree = () => {
   const initialChecked = Object.fromEntries(
     terms.map((term) => [term.id, false])
   );
-  const [checkedItems, setCheckedItems] = useState(initialChecked);
-  const checkAll = terms.every((term) => checkedItems[term.id]);
-  const essentialTerms = terms.filter((term) => term.essential);
 
-  const essentialChecked = essentialTerms.every(
-    (term) => checkedItems[term.id]
+  const [checkedItems, dispatch] = useReducer(reducer, initialChecked);
+  const checkAll = terms.every((term) => checkedItems[term.id]);
+  const essentialChecked = terms.every(
+    (term) => !term.essential || checkedItems[term.id]
   );
 
   const handleAllChecked = (e) => {
-    const isChecked = e.target.checked;
-    const updated = Object.fromEntries(
-      terms.map((term) => [term.id, isChecked])
-    );
-    setCheckedItems(updated);
+    dispatch({ type: "CHECK_ALL", checked: e.target.checked });
   };
-
-  const handleEssentialCheckedAll = (e) => {
-    const isChecked = e.target.checked;
-    setCheckedItems((prev) => ({
-      ...prev,
-      ...Object.fromEntries(essentialTerms.map((term) => [term.id, isChecked])),
-    }));
+  const handleEssentialChecked = (e) => {
+    dispatch({ type: "CHECK_ESSENTIAL", checked: e.target.checked });
   };
-
-  const handleItemChecked = (id, isChecked) => {
-    setCheckedItems((prev) => ({
-      ...prev,
-      [id]: isChecked,
-    }));
+  const handleItemChecked = (id, checked) => {
+    dispatch({ type: "TOGGLE_ITEM", id, checked });
   };
 
   return (
@@ -57,7 +67,7 @@ const Agree = () => {
           label="필수사항 동의"
           checkedAll
           checked={essentialChecked}
-          onChange={handleEssentialCheckedAll}
+          onChange={handleEssentialChecked}
         />
         {terms.map((item) => (
           <AgreeListItem
