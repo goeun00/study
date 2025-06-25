@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-const AgreeListItem = ({ label, listAll, checked, onChange }) => {
+const AgreeListItem = ({ label, checkedAll, checked, onChange }) => {
   const [expand, setExpand] = useState(false);
 
   return (
-    <li className={`list-item__term ${listAll ? "list__all-agree" : ""}`}>
+    <li className={`list-item__term ${checkedAll ? "list__all-agree" : ""}`}>
       <div className={`box__form--checkbox`}>
         <label className="label">
           <input
@@ -16,7 +16,7 @@ const AgreeListItem = ({ label, listAll, checked, onChange }) => {
           {label}
         </label>
       </div>
-      {!listAll && (
+      {!checkedAll && (
         <>
           <button
             className={`button__detail sprite__rentcar-res--after ${
