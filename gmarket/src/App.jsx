@@ -3,6 +3,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Best from "./pages/Best";
 import EMartMall from "./pages/EMartMall";
+import Agree from "./pages/Agree";
 import WeekTab from "./components/WeekTab";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
@@ -24,6 +25,7 @@ function App() {
       <Routes>
         <Route path="/best" element={<Best />} />
         <Route path="/EMartMall" element={<EMartMall />} />
+        <Route path="/Agree" element={<Agree />} />
       </Routes>
     </>
   );

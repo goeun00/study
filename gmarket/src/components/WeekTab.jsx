@@ -25,6 +25,15 @@ const WeekTab = () => {
         </span>
         E-mart
       </NavLink>
+      <NavLink
+        to="/Agree"
+        className={({ isActive }) =>
+          `link__tab${isActive ? " link__tab--active" : ""}`
+        }
+      >
+        <span className="material-symbols-outlined image__icon">handshake</span>
+        예약 동의
+      </NavLink>
     </div>
   );
 };
