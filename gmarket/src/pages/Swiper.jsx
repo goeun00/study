@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation, Autoplay } from "swiper/modules";
+import { Pagination, Navigation, Autoplay, Scrollbar } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import "swiper/css/scrollbar";
 
 import "./Swiper.css";
 
@@ -57,7 +58,8 @@ const MySwiper = () => {
         loop={true}
         pagination={{ clickable: true, type: "fraction" }}
         navigation
-        modules={[Pagination, Navigation, Autoplay]}
+        modules={[Pagination, Navigation, Autoplay, Scrollbar]}
+        scrollbar={{ draggable: true }}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         onInit={handleInit}
         onTransitionEnd={handleTransitionEnd}
