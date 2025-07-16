@@ -7,18 +7,18 @@
   letter-spacing: -0.3px;
   .link__tab {
     font-size: 13px;
-    text-align: center;
+    font-weight: 600;
     color: #444746;
     vertical-align: top;
-    font-weight: 600;
+    text-align: center;
 
     .image__icon {
-      font-size: 24px;
       display: block;
+      margin-bottom: 1px;
       padding: 6px 16px;
       border-radius: 20px;
+      font-size: 24px;
       transition: 0.4s ease-in-out;
-      margin-bottom: 1px;
     }
     &.link__tab--active {
       color: #00639b;
@@ -37,7 +37,81 @@
 #container {
   position: absolute;
   top: 72px;
+  width: 100%;
   height: calc(100% - 72px);
   overflow-y: auto;
-  width: 100%;
+}
+.box__toast {
+  position: fixed;
+  bottom: 0;
+  left: 20px;
+  width: calc(100% - 40px);
+  padding: 16px;
+  border-radius: px;
+  border-radius: 12px;
+  background: #000000d2;
+  font-size: 13px;
+  color: #fff;
+  text-align: center;
+  transform: translateY(100%);
+  transition: 0.3s ease-in-out;
+  &.box__toast--active {
+    transform: translateY(-20px);
+  }
+}
+.box__lottie {
+  .image__lottie {
+    opacity: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+    &.image__lottie--active {
+      opacity: 1;
+      top: 50%;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      transform: translate(-50%, -50%);
+    }
+    &.image__lottie--inactive {
+      opacity: 0;
+      top: 0;
+      left: 100%;
+      width: 0;
+      height: 0;
+      transform: translate(0%, 0%);
+      transition: all 0.4s ease;
+    }
+  }
+}
+
+.button__cart {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 60px;
+  height: 32px;
+  padding: 0 9px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: 20px;
+  background: #ffd200 url(assets/image__cart.png) no-repeat center / 24px;
+  font-size: 0;
+  vertical-align: top;
+  cursor: pointer;
+}
+.button__toast {
+  display: inline-block;
+  box-sizing: border-box;
+  height: 32px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 20px;
+  background: #4952cf;
+  color: #fff;
+  vertical-align: top;
+  cursor: pointer;
+  margin-right: 8px;
 }
