@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "lottie-react": "^2.4.1",
     "swiper": "^11.2.10"
   }
 }
