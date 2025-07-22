@@ -2,7 +2,9 @@ const FilterChip = ({ item, idx, setActive, active }) => {
   return (
     <label
       htmlFor={`ilter-chip` + idx}
-      className={`filter-chip` + (active === idx ? " filter-chip--active" : "")}
+      className={
+        active === idx ? "filter-chip filter-chip--active" : "filter-chip"
+      }
     >
       <input
         id={`ilter-chip` + idx}
