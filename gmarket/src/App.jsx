@@ -7,6 +7,7 @@ import Agree from "./pages/Agree";
 import Swiper from "./pages/Swiper";
 import RoomFilter from "./pages/RoomFilter";
 import CreatePotal from "./pages/CreatePotal";
+import ItemFilter from "./pages/ItemFilter.jsx";
 import WeekTab from "./components/WeekTab";
 
 import { useEffect } from "react";
@@ -60,6 +61,12 @@ function App() {
       icon: "door_open",
       label: "CreatePotal",
       element: <CreatePotal />,
+    },
+    {
+      path: "/ItemFilter",
+      icon: "filter_none",
+      label: "ItemFilter",
+      element: <ItemFilter />,
     },
   ];
 
