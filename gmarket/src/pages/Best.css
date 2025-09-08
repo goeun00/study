@@ -171,6 +171,15 @@
     }
   }
 }
+.box__loading {
+  .image__lottie {
+    width: 90px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
 @media screen and (max-width: 1132px) {
   .service__best {
     .list__best {

@@ -8,7 +8,7 @@ const BestItemCard = ({ item, idx }) => {
   return (
     <li className="list-item">
       <a
-        href="http://item.gmarket.co.kr/Item?goodscode=2704155884"
+        href={`http://item.gmarket.co.kr/Item?goodscode=${item.goodsCode}`}
         className="link"
       >
         <div className="box__thumbnail">

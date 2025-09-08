@@ -13,7 +13,6 @@ const BestCategoryItem = ({ item, idx, isActive, onClick }) => {
         className={`link__category${isActive ? " link__category--active" : ""}`}
         href="#"
         data-montelena-acode="200000318"
-        data-montelena-asn={idx + 1}
         data-montelena-categorycode={item.groupCode}
         data-montelena-categoryname={item.groupName}
         onClick={handleClick}

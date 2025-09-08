@@ -5,6 +5,7 @@
   background: #f0f4f9;
   font-family: "Pretendard Variable";
   letter-spacing: -0.3px;
+  overflow-x: auto;
   .link__tab {
     font-size: 13px;
     font-weight: 600;
