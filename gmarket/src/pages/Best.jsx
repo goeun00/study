@@ -1,5 +1,5 @@
 import "./Best.css";
-import { useState, lazy, Suspense, useMemo, useCallback } from "react";
+import { useState, lazy, Suspense, useMemo, useCallback, memo } from "react";
 import ItemCard from "../components/BestItemCard";
 import BestCategoryItem from "../components/BestCategoryItem";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -16,17 +16,61 @@ function FallbackComponent({ error, resetErrorBoundary }) {
   );
 }
 
+const MainCategory = memo(function MainCategory({
+  categoryData,
+  categoryActive,
+  onClickCategory,
+}) {
+  return (
+    <Swiper
+      className="list__category-filter list__1depth-filter"
+      spaceBetween={0}
+      slidesPerView="auto"
+    >
+      {categoryData.map((item, idx) => (
+        <SwiperSlide key={idx}>
+          <BestCategoryItem
+            item={item}
+            isActive={categoryActive === idx}
+            onClick={() => onClickCategory(idx)}
+          />
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  );
+});
+
+function SubCategory({ subGroups, subgroupActive, onClickSubgroup }) {
+  return (
+    <ul className="list__category-filter list__2depth-filter">
+      {subGroups.map((item, idx) => (
+        <li className="list-item" key={idx}>
+          <a
+            className={`link__category${
+              subgroupActive === idx ? " link__category--active" : ""
+            }`}
+            href={`/n/best?groupCode=${item.groupCode}`}
+            onClick={onClickSubgroup(idx)}
+          >
+            <span className="text__title">{item.groupSubName}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 const BestContent = lazy(async () => {
   await new Promise((resolve) => setTimeout(resolve, 2000));
   const { BestDummyData } = await import("../data/BestDummyData");
   const [{ categoryData = [], item = [] } = {}] = BestDummyData;
 
   const Component = () => {
-    const [activeIdx, setActiveIdx] = useState(0);
-    const [subgropActive, setSubgropActive] = useState(0);
+    const [categoryActive, setCategoryActive] = useState(0);
+    const [subgroupActive, setSubgropActive] = useState(0);
 
     const handleClickCategory = useCallback((idx) => {
-      setActiveIdx(idx);
+      setCategoryActive(idx);
       setSubgropActive(0);
     }, []);
 
@@ -61,38 +105,18 @@ const BestContent = lazy(async () => {
           <div className="box__sub-category" role="navigation">
             <h3 className="for-a11y">카테고리</h3>
             <div className="box__category-filter">
-              <Swiper
-                className="list__category-filter list__1depth-filter"
-                spaceBetween={0}
-                slidesPerView="auto"
-              >
-                {categoryData.map((item, idx) => (
-                  <SwiperSlide key={idx}>
-                    <BestCategoryItem
-                      item={item}
-                      isActive={activeIdx === idx}
-                      onClick={() => handleClickCategory(idx)}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              <MainCategory
+                categoryData={categoryData}
+                categoryActive={categoryActive}
+                onClickCategory={handleClickCategory}
+              />
 
-              {activeIdx > 0 && (
-                <ul className="list__category-filter list__2depth-filter">
-                  {categoryData[activeIdx].subGroups.map((item, idx) => (
-                    <li className="list-item" key={idx}>
-                      <a
-                        className={`link__category${
-                          subgropActive === idx ? " link__category--active" : ""
-                        }`}
-                        href={`/n/best?groupCode=${item.groupCode}`}
-                        onClick={handleClickSubgroup(idx)}
-                      >
-                        <span className="text__title">{item.groupSubName}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+              {categoryActive > 0 && (
+                <SubCategory
+                  subGroups={categoryData[categoryActive].subGroups}
+                  subgroupActive={subgroupActive}
+                  onClickSubgroup={handleClickSubgroup}
+                />
               )}
             </div>
           </div>
@@ -106,7 +130,8 @@ const BestContent = lazy(async () => {
 });
 
 function BestWrapper({ errorTest }) {
-  if (errorTest) throw new Error("테스트용 에러");
+  if (errorTest)
+    throw new Error("정상동작하기로 변경 후 다시시도하면 정상화면노출");
   return <BestContent />;
 }
 
@@ -120,7 +145,7 @@ const Best = () => {
         className="button__error-toggle"
         onClick={() => setErrorTest((prev) => !prev)}
       >
-        {errorTest ? "정상 동작" : " 에러 발생"}
+        {errorTest ? "정상 동작하기" : " 에러 발생 시키기"}
       </button>
 
       <ErrorBoundary FallbackComponent={FallbackComponent}>

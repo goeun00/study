@@ -13,6 +13,9 @@
   }
   .box__best-list {
     position: relative;
+    .swiper {
+      width: 100%;
+    }
     .box__sub-category {
       top: 0;
       .swiper-wrapper {
