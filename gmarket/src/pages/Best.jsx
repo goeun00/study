@@ -16,7 +16,7 @@ function FallbackComponent({ error, resetErrorBoundary }) {
   );
 }
 
-const MainCategory = memo(function MainCategory({
+const MainCategory = function MainCategory({
   categoryData,
   categoryActive,
   onClickCategory,
@@ -38,7 +38,7 @@ const MainCategory = memo(function MainCategory({
       ))}
     </Swiper>
   );
-});
+};
 
 function SubCategory({ subGroups, subgroupActive, onClickSubgroup }) {
   return (
@@ -69,26 +69,17 @@ const BestContent = lazy(async () => {
     const [categoryActive, setCategoryActive] = useState(0);
     const [subgroupActive, setSubgropActive] = useState(0);
 
-    const handleClickCategory = useCallback((idx) => {
+    function handleClickCategory(idx) {
       setCategoryActive(idx);
       setSubgropActive(0);
-    }, []);
+    }
 
-    const handleClickSubgroup = useCallback(
-      (idx) => (e) => {
+    function handleClickSubgroup(idx) {
+      return function (e) {
         e.preventDefault();
         setSubgropActive(idx);
-      },
-      []
-    );
-
-    const itemCards = useMemo(
-      () =>
-        item.map((target, idx) => (
-          <ItemCard item={target} key={idx} idx={idx} />
-        )),
-      [item]
-    );
+      };
+    }
 
     return (
       <div className="service__best">
@@ -121,7 +112,11 @@ const BestContent = lazy(async () => {
             </div>
           </div>
 
-          <ul className="list__best">{itemCards}</ul>
+          <ul className="list__best">
+            {item.map((target, idx) => (
+              <ItemCard item={target} key={idx} idx={idx} />
+            ))}
+          </ul>
         </div>
       </div>
     );
