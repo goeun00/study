@@ -1,5 +1,5 @@
 import "./Best.css";
-import { useState, lazy, Suspense, useMemo, useCallback, memo } from "react";
+import { useState, lazy, Suspense, useMemo, useCallback } from "react";
 import ItemCard from "../components/BestItemCard";
 import BestCategoryItem from "../components/BestCategoryItem";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -16,11 +16,7 @@ function FallbackComponent({ error, resetErrorBoundary }) {
   );
 }
 
-const MainCategory = function MainCategory({
-  categoryData,
-  categoryActive,
-  onClickCategory,
-}) {
+function MainCategory({ categoryData, categoryActive, onClickCategory }) {
   return (
     <Swiper
       className="list__category-filter list__1depth-filter"
@@ -38,7 +34,7 @@ const MainCategory = function MainCategory({
       ))}
     </Swiper>
   );
-};
+}
 
 function SubCategory({ subGroups, subgroupActive, onClickSubgroup }) {
   return (
@@ -69,17 +65,26 @@ const BestContent = lazy(async () => {
     const [categoryActive, setCategoryActive] = useState(0);
     const [subgroupActive, setSubgropActive] = useState(0);
 
-    function handleClickCategory(idx) {
+    const handleClickCategory = useCallback((idx) => {
       setCategoryActive(idx);
       setSubgropActive(0);
-    }
+    }, []);
 
-    function handleClickSubgroup(idx) {
-      return function (e) {
+    const handleClickSubgroup = useCallback(
+      (idx) => (e) => {
         e.preventDefault();
         setSubgropActive(idx);
-      };
-    }
+      },
+      []
+    );
+
+    const itemCards = useMemo(
+      () =>
+        item.map((target, idx) => (
+          <ItemCard item={target} key={idx} idx={idx} />
+        )),
+      [item]
+    );
 
     return (
       <div className="service__best">
@@ -112,11 +117,7 @@ const BestContent = lazy(async () => {
             </div>
           </div>
 
-          <ul className="list__best">
-            {item.map((target, idx) => (
-              <ItemCard item={target} key={idx} idx={idx} />
-            ))}
-          </ul>
+          <ul className="list__best">{itemCards}</ul>
         </div>
       </div>
     );
