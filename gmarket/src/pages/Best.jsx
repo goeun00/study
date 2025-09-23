@@ -23,6 +23,13 @@ function FallbackComponent({ error, resetErrorBoundary }) {
   );
 }
 
+function withAccessGuard(Component, { fallback }) {
+  return function Wrapped(props) {
+    if (!props.canAccess) return fallback || null;
+    return <Component {...props} />;
+  };
+}
+
 function useBestCategoryReducer() {
   const init = { categoryActive: 0, subgroupActive: 0 };
   function reducer(state, action) {
@@ -160,8 +167,13 @@ function BestWrapper({ errorTest }) {
   return <BestContent />;
 }
 
+const GuardedBestWrapper = withAccessGuard(BestWrapper, {
+  fallback: <div className="box__error">접근 권한이 필요합니다</div>,
+});
+
 export default function Best() {
   const [errorTest, setErrorTest] = useState(false);
+  const [canAccess, setCanAccess] = useState(true);
 
   return (
     <div id="container">
@@ -172,7 +184,13 @@ export default function Best() {
       >
         {errorTest ? "정상 동작하기" : " 에러 발생 시키기"}
       </button>
-
+      <button
+        type="button"
+        className="button__access-toggle"
+        onClick={() => setCanAccess((prev) => !prev)}
+      >
+        {canAccess ? "권한 제거하기" : "권한 부여하기"}
+      </button>
       <ErrorBoundary FallbackComponent={FallbackComponent}>
         <Suspense
           fallback={
@@ -185,7 +203,7 @@ export default function Best() {
             </div>
           }
         >
-          <BestWrapper errorTest={errorTest} />
+          <GuardedBestWrapper errorTest={errorTest} canAccess={canAccess} />
         </Suspense>
       </ErrorBoundary>
     </div>
