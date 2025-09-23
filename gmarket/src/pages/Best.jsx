@@ -1,5 +1,12 @@
 import "./Best.css";
-import { useState, lazy, Suspense, useMemo, useCallback } from "react";
+import {
+  useState,
+  useReducer,
+  lazy,
+  Suspense,
+  useMemo,
+  useCallback,
+} from "react";
 import ItemCard from "../components/BestItemCard";
 import BestCategoryItem from "../components/BestCategoryItem";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -14,6 +21,40 @@ function FallbackComponent({ error, resetErrorBoundary }) {
       <button onClick={resetErrorBoundary}>다시 시도</button>
     </div>
   );
+}
+
+function useBestCategoryReducer() {
+  const init = { categoryActive: 0, subgroupActive: 0 };
+  function reducer(state, action) {
+    switch (action.type) {
+      case "category":
+        return { categoryActive: action.idx, subgroupActive: 0 };
+      case "subCategory":
+        return { ...state, subgroupActive: action.idx };
+      default:
+        return state;
+    }
+  }
+  const [state, dispatch] = useReducer(reducer, init);
+  const onClickCategory = useCallback(
+    (idx) => {
+      dispatch({ type: "category", idx });
+    },
+    [dispatch]
+  );
+  const onClickSubgroup = useCallback(
+    (idx) => (e) => {
+      e.preventDefault();
+      dispatch({ type: "subCategory", idx });
+    },
+    [dispatch]
+  );
+  return {
+    categoryActive: state.categoryActive,
+    subgroupActive: state.subgroupActive,
+    onClickCategory,
+    onClickSubgroup,
+  };
 }
 
 function MainCategory({ categoryData, categoryActive, onClickCategory }) {
@@ -62,21 +103,8 @@ const BestContent = lazy(async () => {
   const [{ categoryData = [], item = [] } = {}] = BestDummyData;
 
   const Component = () => {
-    const [categoryActive, setCategoryActive] = useState(0);
-    const [subgroupActive, setSubgropActive] = useState(0);
-
-    const handleClickCategory = useCallback((idx) => {
-      setCategoryActive(idx);
-      setSubgropActive(0);
-    }, []);
-
-    const handleClickSubgroup = useCallback(
-      (idx) => (e) => {
-        e.preventDefault();
-        setSubgropActive(idx);
-      },
-      []
-    );
+    const { categoryActive, subgroupActive, onClickCategory, onClickSubgroup } =
+      useBestCategoryReducer();
 
     const itemCards = useMemo(
       () =>
@@ -104,14 +132,14 @@ const BestContent = lazy(async () => {
               <MainCategory
                 categoryData={categoryData}
                 categoryActive={categoryActive}
-                onClickCategory={handleClickCategory}
+                onClickCategory={onClickCategory}
               />
 
               {categoryActive > 0 && (
                 <SubCategory
                   subGroups={categoryData[categoryActive].subGroups}
                   subgroupActive={subgroupActive}
-                  onClickSubgroup={handleClickSubgroup}
+                  onClickSubgroup={onClickSubgroup}
                 />
               )}
             </div>
@@ -122,6 +150,7 @@ const BestContent = lazy(async () => {
       </div>
     );
   };
+
   return { default: Component };
 });
 
@@ -131,7 +160,7 @@ function BestWrapper({ errorTest }) {
   return <BestContent />;
 }
 
-const Best = () => {
+export default function Best() {
   const [errorTest, setErrorTest] = useState(false);
 
   return (
@@ -151,7 +180,7 @@ const Best = () => {
               <Lottie
                 animationData={loadingLottie}
                 loop={false}
-                className={`image__lottie`}
+                className="image__lottie"
               />
             </div>
           }
@@ -161,6 +190,4 @@ const Best = () => {
       </ErrorBoundary>
     </div>
   );
-};
-
-export default Best;
+}
