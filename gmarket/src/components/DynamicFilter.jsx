@@ -1,11 +1,12 @@
-import { useContext } from "react";
-import { ItemFilterContext } from "../pages/ItemFilter";
+import { useAtom } from "jotai";
+
+import { activeCategoryAtom, activeBrandAtom } from "../atom/atom";
 
 const DynamicFilter = ({ title, option }) => {
   const isCategory = title === "카테고리";
 
-  const { activeCategory, setActiveCategory, activeBrand, setActiveBrand } =
-    useContext(ItemFilterContext);
+  const [activeCategory, setActiveCategory] = useAtom(activeCategoryAtom);
+  const [activeBrand, setActiveBrand] = useAtom(activeBrandAtom);
 
   return (
     <ul className="list__dynamic-filter">

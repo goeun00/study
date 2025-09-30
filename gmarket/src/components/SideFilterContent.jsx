@@ -1,17 +1,21 @@
-import { useContext } from "react";
-import { ItemFilterContext } from "../pages/ItemFilter";
+import { useAtom } from "jotai";
+
+import {
+  exclusiveDeliveryMethodAtom,
+  multiDeliveryMethodsAtom,
+  activeCategoryAtom,
+  activeBrandAtom,
+} from "../atom/atom";
 
 const SideFilterContent = ({ title, options }) => {
-  const {
-    exclusiveDeliveryMethod,
-    setExclusiveDeliveryMethod,
-    multiDeliveryMethods,
-    setMultiDeliveryMethods,
-    activeCategory,
-    setActiveCategory,
-    activeBrand,
-    setActiveBrand,
-  } = useContext(ItemFilterContext);
+  const [exclusiveDeliveryMethod, setExclusiveDeliveryMethod] = useAtom(
+    exclusiveDeliveryMethodAtom
+  );
+  const [multiDeliveryMethods, setMultiDeliveryMethods] = useAtom(
+    multiDeliveryMethodsAtom
+  );
+  const [activeCategory, setActiveCategory] = useAtom(activeCategoryAtom);
+  const [activeBrand, setActiveBrand] = useAtom(activeBrandAtom);
 
   const isExclusiveItem = (item) => item === "이마트몰" || item === "스타배송";
   const isActive = (item) => {
@@ -28,7 +32,6 @@ const SideFilterContent = ({ title, options }) => {
     }
     return false;
   };
-
   const onToggle = (item) => {
     if (title === "배송유형") {
       if (isExclusiveItem(item)) {
