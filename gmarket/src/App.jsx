@@ -9,6 +9,7 @@ import RoomFilter from "./pages/RoomFilter";
 import CreatePotal from "./pages/CreatePotal";
 import ItemFilter from "./pages/ItemFilter.jsx";
 import WeekTab from "./components/WeekTab";
+import DesignPattern from "./pages/DesignPattern";
 
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
@@ -67,6 +68,12 @@ function App() {
       icon: "filter_none",
       label: "ItemFilter",
       element: <ItemFilter />,
+    },
+    {
+      path: "/DesignPattern",
+      icon: "grid_4x4",
+      label: "DesignPattern",
+      element: <DesignPattern />,
     },
   ];
 
