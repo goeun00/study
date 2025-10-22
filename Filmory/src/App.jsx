@@ -4,6 +4,8 @@ import { useEffect, useState, useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import Footer from "./components/Footer";
+import MovieRankItem from "./components/MovieRankItem";
 
 function App() {
   const today = useMemo(() => {
@@ -16,6 +18,9 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const KobisKey = import.meta.env.VITE_KobisKey;
+  const ServiceKey = import.meta.env.VITE_ServiceKey;
 
   const formatDate = (date) =>
     date.toISOString().slice(0, 10).replace(/-/g, "");
@@ -46,14 +51,14 @@ function App() {
     const fetchMovies = async () => {
       try {
         const kobisRes = await axios.get(
-          `https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=29aeae0e374d0ff9dc8f5ae0a7b4523d&repNationCd=&targetDt=${formatDate(
+          `https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${KobisKey}&repNationCd=&targetDt=${formatDate(
             date
           )}`
         );
         const movieList = kobisRes.data.boxOfficeResult.dailyBoxOfficeList;
         const kmdbPromises = movieList.map(async (movie) => {
           const openDt = movie.openDt.replaceAll("-", "");
-          const kmdbUrl = `https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=2HPGM97PQ2XKQ74828W5&sort=prodYear,1&releaseDts=${openDt}&detail=Y&query=${encodeURIComponent(
+          const kmdbUrl = `https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=${ServiceKey}&sort=prodYear,1&releaseDts=${openDt}&detail=Y&query=${encodeURIComponent(
             movie.movieNm
           )}`;
           try {
@@ -76,13 +81,14 @@ function App() {
     };
     fetchMovies();
   }, [date]);
-  
+
   if (error) {
     return <div className="error">An error occurred: {error.message}</div>;
   }
   return (
     <div className="box_wrap">
-      <div className="box_heading">
+      {/* <Header /> */}
+      <div className="box_content-heading">
         <h2 className="text_heading1">
           <span> {formatDate(date).slice(0, 4)}</span>
           <span className="text">Daily Box Office</span>
@@ -121,41 +127,22 @@ function App() {
           </button>
         )}
       </div>
-      {loading && <div className="loading">Loading...</div>}
-      <Swiper
-        wrapperTag="ul"
-        className="list_box-office"
-        slidesPerView={"auto"}
-      >
-        {movies?.map((movie) => (
-          <SwiperSlide key={movie.rnum} className="list-item" tag="li">
-            <p className="text_rank">{String(movie.rank).padStart(2, "0")}</p>
-            <div className="box_thumnail">
-              {movie.posterUrl ? (
-                <img
-                  src={movie.posterUrl}
-                  alt={movie.movieNm}
-                  className="image_poster"
-                />
-              ) : (
-                <div className="box_empty"></div>
-              )}
-            </div>
-            <div className="box_info">
-              <p className="text_title">{movie.movieNm}</p>
-              <p className="text_title-eng">{movie.titleEng}</p>
-              <p className="text_detail">
-                <span className="text_num">
-                  <b>Date</b>: {movie.openDt}
-                </span>
-                <span className="text_num">
-                  <b>Audience</b>: {movie.audiCnt}명
-                </span>
-              </p>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {loading ? (
+        <div className="loading list_box-office">Loading...</div>
+      ) : (
+        <Swiper
+          wrapperTag="ul"
+          className="list_box-office"
+          slidesPerView={"auto"}
+        >
+          {movies?.map((movie) => (
+            <SwiperSlide key={movie.rnum} className="list-item" tag="li">
+              <MovieRankItem movie={movie} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
+      <Footer />
     </div>
   );
 }
