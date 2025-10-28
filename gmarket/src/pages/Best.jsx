@@ -1,12 +1,5 @@
 import "./Best.css";
-import {
-  useState,
-  useReducer,
-  lazy,
-  Suspense,
-  useMemo,
-  useCallback,
-} from "react";
+import { useState, useReducer, lazy, Suspense, useMemo, useCallback } from "react";
 import ItemCard from "../components/BestItemCard";
 import BestCategoryItem from "../components/BestCategoryItem";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -66,18 +59,10 @@ function useBestCategoryReducer() {
 
 function MainCategory({ categoryData, categoryActive, onClickCategory }) {
   return (
-    <Swiper
-      className="list__category-filter list__1depth-filter"
-      spaceBetween={0}
-      slidesPerView="auto"
-    >
+    <Swiper className="list__category-filter list__1depth-filter" spaceBetween={0} slidesPerView="auto">
       {categoryData.map((item, idx) => (
         <SwiperSlide key={idx}>
-          <BestCategoryItem
-            item={item}
-            isActive={categoryActive === idx}
-            onClick={() => onClickCategory(idx)}
-          />
+          <BestCategoryItem item={item} isActive={categoryActive === idx} onClick={() => onClickCategory(idx)} />
         </SwiperSlide>
       ))}
     </Swiper>
@@ -89,13 +74,7 @@ function SubCategory({ subGroups, subgroupActive, onClickSubgroup }) {
     <ul className="list__category-filter list__2depth-filter">
       {subGroups.map((item, idx) => (
         <li className="list-item" key={idx}>
-          <a
-            className={`link__category${
-              subgroupActive === idx ? " link__category--active" : ""
-            }`}
-            href={`/n/best?groupCode=${item.groupCode}`}
-            onClick={onClickSubgroup(idx)}
-          >
+          <a className={`link__category${subgroupActive === idx ? " link__category--active" : ""}`} href={`/n/best?groupCode=${item.groupCode}`} onClick={onClickSubgroup(idx)}>
             <span className="text__title">{item.groupSubName}</span>
           </a>
         </li>
@@ -110,16 +89,9 @@ const BestContent = lazy(async () => {
   const [{ categoryData = [], item = [] } = {}] = BestDummyData;
 
   const Component = () => {
-    const { categoryActive, subgroupActive, onClickCategory, onClickSubgroup } =
-      useBestCategoryReducer();
+    const { categoryActive, subgroupActive, onClickCategory, onClickSubgroup } = useBestCategoryReducer();
 
-    const itemCards = useMemo(
-      () =>
-        item.map((target, idx) => (
-          <ItemCard item={target} key={idx} idx={idx} />
-        )),
-      [item]
-    );
+    const itemCards = useMemo(() => item.map((target, idx) => <ItemCard item={target} key={idx} idx={idx} />), [item]);
 
     return (
       <div className="service__best">
@@ -136,19 +108,9 @@ const BestContent = lazy(async () => {
           <div className="box__sub-category" role="navigation">
             <h3 className="for-a11y">카테고리</h3>
             <div className="box__category-filter">
-              <MainCategory
-                categoryData={categoryData}
-                categoryActive={categoryActive}
-                onClickCategory={onClickCategory}
-              />
+              <MainCategory categoryData={categoryData} categoryActive={categoryActive} onClickCategory={onClickCategory} />
 
-              {categoryActive > 0 && (
-                <SubCategory
-                  subGroups={categoryData[categoryActive].subGroups}
-                  subgroupActive={subgroupActive}
-                  onClickSubgroup={onClickSubgroup}
-                />
-              )}
+              {categoryActive > 0 && <SubCategory subGroups={categoryData[categoryActive].subGroups} subgroupActive={subgroupActive} onClickSubgroup={onClickSubgroup} />}
             </div>
           </div>
 
@@ -162,8 +124,7 @@ const BestContent = lazy(async () => {
 });
 
 function BestWrapper({ errorTest }) {
-  if (errorTest)
-    throw new Error("정상동작하기로 변경 후 다시시도하면 정상화면노출");
+  if (errorTest) throw new Error("정상동작하기로 변경 후 다시시도하면 정상화면노출");
   return <BestContent />;
 }
 
@@ -177,29 +138,17 @@ export default function Best() {
 
   return (
     <div id="container">
-      <button
-        type="button"
-        className="button__error-toggle"
-        onClick={() => setErrorTest((prev) => !prev)}
-      >
+      <button type="button" className="button__error-toggle" onClick={() => setErrorTest((prev) => !prev)}>
         {errorTest ? "정상 동작하기" : " 에러 발생 시키기"}
       </button>
-      <button
-        type="button"
-        className="button__access-toggle"
-        onClick={() => setCanAccess((prev) => !prev)}
-      >
+      <button type="button" className="button__access-toggle" onClick={() => setCanAccess((prev) => !prev)}>
         {canAccess ? "권한 제거하기" : "권한 부여하기"}
       </button>
       <ErrorBoundary FallbackComponent={FallbackComponent}>
         <Suspense
           fallback={
             <div className="box__loading">
-              <Lottie
-                animationData={loadingLottie}
-                loop={false}
-                className="image__lottie"
-              />
+              <Lottie animationData={loadingLottie} loop={false} className="image__lottie" />
             </div>
           }
         >
