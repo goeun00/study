@@ -1,20 +1,11 @@
-import { useState } from "react";
-const MovieRankItem = ({ movie }) => {
-  const [expandThumnail, setExpandThumnail] = useState(false);
+const MovieRankItem = ({ movie, isExpanded, onExpand }) => {
   return (
     <div className="box_item">
       <p className="text_rank">{String(movie.rank).padStart(2, "0")}</p>
-      <a
-        href="#"
-        className="link"
-        onClick={(e) => {
-          e.preventDefault();
-          setExpandThumnail((prev) => !prev);
-        }}
-      >
-        <div className={"box_thumnail" + (expandThumnail ? " box-expand" : "")}>
+      <a href="#" className="link" onClick={onExpand}>
+        <div className={"box_thumnail" + (isExpanded ? " box-expand" : "")}>
           <button type="button" className="button_expand">
-            {!expandThumnail ? (
+            {!isExpanded ? (
               <span className="icon material-symbols-outlined">
                 expand_content
               </span>
@@ -44,7 +35,7 @@ const MovieRankItem = ({ movie }) => {
       >
         <div className="box_info">
           <p className="text_title">{movie.movieNm}</p>
-          <p className="text_title-eng">{movie.titleEng}</p>
+          <p className="text_title-sub">{movie.titleEng}</p>
           <p className="text_detail">
             <span className="text_num">
               <b>Date</b>: {movie.openDt}
