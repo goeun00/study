@@ -4,11 +4,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import MovieRankItem from "../components/MovieRankItem";
+import { useMovieAPI } from "../api/useMovieAPI";
 
 const KobisKey = import.meta.env.VITE_KobisKey;
-const ServiceKey = import.meta.env.VITE_ServiceKey;
 
-function BoxOffice() {
+export default function BoxOffice() {
+  const { fetchMovieDetail } = useMovieAPI();
+
   const today = useMemo(() => {
     const t = new Date();
     t.setDate(t.getDate() - 1);
@@ -23,16 +25,14 @@ function BoxOffice() {
   const [error, setError] = useState(null);
   const [expandedIdx, setExpandedIdx] = useState(null);
 
-  const formatDate = (date) =>
-    date.toISOString().slice(0, 10).replace(/-/g, "");
+  const formatDate = (date) => date.toISOString().slice(0, 10).replace(/-/g, "");
 
   const formatMonthFull = (date) => {
     return date.toLocaleDateString("en-US", { month: "long", day: "2-digit" });
   };
 
   const monthDate = formatMonthFull(date);
-  const isNextDisabled =
-    date >= today || date.toDateString() === today.toDateString();
+  const isNextDisabled = date >= today || date.toDateString() === today.toDateString();
 
   const changeDay = (direction) => {
     setDate((prev) => {
@@ -54,26 +54,19 @@ function BoxOffice() {
     const fetchMovies = async () => {
       setFade(true);
       try {
-        const kobisRes = await axios.get(
-          `https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${KobisKey}&repNationCd=&targetDt=${formatDate(
-            date
-          )}`
-        );
+        const kobisRes = await axios.get(`https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${KobisKey}&repNationCd=&targetDt=${formatDate(date)}`);
         const movieList = kobisRes.data.boxOfficeResult.dailyBoxOfficeList;
         const kmdbPromises = movieList.map(async (movie) => {
-          const openDt = movie.openDt.replaceAll("-", "");
-          const kmdbUrl = `https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=${ServiceKey}&sort=prodYear,1&releaseDts=${openDt}&detail=Y&query=${encodeURIComponent(
-            movie.movieNm
-          )}`;
-          try {
-            const kmdbRes = await axios.get(kmdbUrl);
-            const result = kmdbRes.data?.Data?.[0]?.Result?.[0];
-            const posterUrl = result?.posters.split("|")[0] || "";
-            const titleEng = result?.titleEng.replace(/!HS|!HE/g, "") || "";
-            return { ...movie, posterUrl, titleEng };
-          } catch {
-            return { ...movie, posterUrl: "", titleEng: "" };
-          }
+          const openDt = movie.openDt.replaceAll("-", "") || "";
+          const dateNum = Number(openDt);
+          const dateRange = [dateNum - 2, dateNum, dateNum + 2].map(String).join(",");
+          const { posterUrl, titleEng } = await fetchMovieDetail(movie.movieNm, dateRange);
+          return {
+            ...movie,
+            posterUrl,
+            titleEng,
+            title: movie.movieNm,
+          };
         });
         const moviesWithPoster = await Promise.all(kmdbPromises);
         setMovies(moviesWithPoster);
@@ -99,55 +92,27 @@ function BoxOffice() {
           <span className="text">Daily Box Office</span>
         </h2>
         <div className="box_calendar">
-          <Calendar
-            onChange={handleDateChange}
-            value={date}
-            maxDate={today}
-            minDate={new Date(2003, 10, 12)}
-            locale="en-US"
-            calendarType="gregory"
-            formatMonthYear={(locale, date) =>
-              date.toLocaleDateString("en-US", { month: "short" })
-            }
-          />
+          <Calendar onChange={handleDateChange} value={date} maxDate={today} minDate={new Date(2003, 10, 12)} locale="en-US" calendarType="gregory" formatMonthYear={(locale, date) => date.toLocaleDateString("en-US", { month: "short" })} />
         </div>
       </div>
       <div className="box_date">
-        <button
-          className="button"
-          type="button"
-          onClick={() => changeDay("prev")}
-        >
+        <button className="button" type="button" onClick={() => changeDay("prev")}>
           <span className="material-symbols-outlined">keyboard_arrow_left</span>
         </button>
         <span className="text_date">{monthDate} </span>
         {!isNextDisabled && (
-          <button
-            className="button"
-            type="button"
-            onClick={() => changeDay("next")}
-          >
-            <span className="material-symbols-outlined">
-              keyboard_arrow_right
-            </span>
+          <button className="button" type="button" onClick={() => changeDay("next")}>
+            <span className="material-symbols-outlined">keyboard_arrow_right</span>
           </button>
         )}
       </div>
       {loading ? (
         <div className="loading list_box-office">Loading...</div>
       ) : (
-        <Swiper
-          wrapperTag="ul"
-          className={`list_box-office ${fade ? "fade-out" : "fade-in"}`}
-          slidesPerView={"auto"}
-        >
+        <Swiper wrapperTag="ul" className={`list_box-office ${fade ? "fade-out" : "fade-in"}`} slidesPerView={"auto"}>
           {movies?.map((movie, idx) => (
             <SwiperSlide key={movie.rnum} className="list-item" tag="li">
-              <MovieRankItem
-                movie={movie}
-                isExpanded={expandedIdx === idx}
-                onExpand={() => handleExpand(idx)}
-              />
+              <MovieRankItem item={movie} isExpanded={expandedIdx === idx} onExpand={() => handleExpand(idx)} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -155,5 +120,3 @@ function BoxOffice() {
     </div>
   );
 }
-
-export default BoxOffice;

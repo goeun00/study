@@ -1,29 +1,13 @@
-const MovieRankItem = ({ movie, isExpanded, onExpand }) => {
+const MovieRankItem = ({ item, isExpanded, onExpand }) => {
   return (
     <div className="box_item">
-      <p className="text_rank">{String(movie.rank).padStart(2, "0")}</p>
+      <p className="text_rank">{String(item.rank).padStart(2, "0")}</p>
       <a href="#" className="link" onClick={onExpand}>
         <div className={"box_thumnail" + (isExpanded ? " box-expand" : "")}>
           <button type="button" className="button_expand">
-            {!isExpanded ? (
-              <span className="icon material-symbols-outlined">
-                expand_content
-              </span>
-            ) : (
-              <span className="icon material-symbols-outlined">
-                collapse_content
-              </span>
-            )}
+            {!isExpanded ? <span className="icon material-symbols-outlined">expand_content</span> : <span className="icon material-symbols-outlined">collapse_content</span>}
           </button>
-          {movie.posterUrl ? (
-            <img
-              src={movie.posterUrl}
-              alt={movie.movieNm}
-              className="image_poster"
-            />
-          ) : (
-            <div className="image_poster"></div>
-          )}
+          {item.posterUrl ? <img src={item.posterUrl} alt={item.title} className="image_poster" /> : <div className="image_poster"></div>}
         </div>
       </a>
       <a
@@ -34,14 +18,14 @@ const MovieRankItem = ({ movie, isExpanded, onExpand }) => {
         }}
       >
         <div className="box_info">
-          <p className="text_title">{movie.movieNm}</p>
-          <p className="text_title-sub">{movie.titleEng}</p>
+          <p className="text_title">{item.title}</p>
+          <p className="text_title-sub">{item.titleEng}</p>
           <p className="text_detail">
             <span className="text_num">
-              <b>Date</b>: {movie.openDt}
+              <b>Date</b>: {item.openDt}
             </span>
             <span className="text_num">
-              <b>Audience</b>: {movie.audiCnt}명
+              <b>Audience</b>: {item.audiCnt}명
             </span>
           </p>
         </div>
