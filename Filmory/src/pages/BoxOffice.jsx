@@ -1,15 +1,13 @@
-import axios from "axios";
 import { useEffect, useState, useMemo } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import MovieRankItem from "../components/MovieRankItem";
-import { useMovieAPI } from "../api/useMovieAPI";
-
-const KobisKey = import.meta.env.VITE_KobisKey;
+import { useKobisAPI, useKmdbAPI } from "../api/useMovieAPI";
 
 export default function BoxOffice() {
-  const { fetchMovieDetail } = useMovieAPI();
+  const { fetchMovieDetail } = useKmdbAPI();
+  const { dailyBoxOffice } = useKobisAPI();
 
   const today = useMemo(() => {
     const t = new Date();
@@ -47,29 +45,26 @@ export default function BoxOffice() {
     if (selectedDate > today) return;
     setDate(selectedDate);
   };
+
   const handleExpand = (idx) => {
     setExpandedIdx((prev) => (prev === idx ? null : idx));
   };
+
   useEffect(() => {
     const fetchMovies = async () => {
       setFade(true);
       try {
-        const kobisRes = await axios.get(`https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${KobisKey}&repNationCd=&targetDt=${formatDate(date)}`);
-        const movieList = kobisRes.data.boxOfficeResult.dailyBoxOfficeList;
-        const kmdbPromises = movieList.map(async (movie) => {
-          const openDt = movie.openDt.replaceAll("-", "") || "";
-          const dateNum = Number(openDt);
-          const dateRange = [dateNum - 2, dateNum, dateNum + 2].map(String).join(",");
-          const { posterUrl, titleEng } = await fetchMovieDetail(movie.movieNm, dateRange);
-          return {
-            ...movie,
-            posterUrl,
-            titleEng,
-            title: movie.movieNm,
-          };
-        });
-        const moviesWithPoster = await Promise.all(kmdbPromises);
-        setMovies(moviesWithPoster);
+        const boxOfficeRank = await dailyBoxOffice(formatDate(date));
+        const moviesDetail = await Promise.all(
+          boxOfficeRank.map(async (movie) => {
+            const openDt = movie.openDt.replaceAll("-", "") || "";
+            const dateNum = Number(openDt);
+            const dateRange = [dateNum - 2, dateNum, dateNum + 2].map(String).join(",");
+            const { posterUrl, titleEng } = await fetchMovieDetail(movie.movieNm, dateRange);
+            return { ...movie, posterUrl, titleEng, title: movie.movieNm };
+          })
+        );
+        setMovies(moviesDetail);
       } catch (err) {
         setError(err);
       } finally {
@@ -82,7 +77,7 @@ export default function BoxOffice() {
   }, [date]);
 
   if (error) {
-    return <div className="error">An error occurred: {error.message}</div>;
+    return <div className="error">{error.message}</div>;
   }
   return (
     <div className="box_content">

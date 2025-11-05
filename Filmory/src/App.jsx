@@ -8,10 +8,10 @@ import Footer from "./components/Footer";
 import SideBar from "./components/SideBar";
 
 const nav = [
-  { name: "search movie", to: "/SearchList", conponant: <SearchList /> },
   { name: "box office", to: "/", conponant: <BoxOffice /> },
-  { name: "review note", to: "/Review", conponant: <Review /> },
+  { name: "search movie", to: "/SearchList", conponant: <SearchList /> },
   { name: "save box", to: "/SaveBox", conponant: <SaveBox /> },
+  { name: "review note", to: "/Review", conponant: <Review /> },
 ];
 
 const App = () => {

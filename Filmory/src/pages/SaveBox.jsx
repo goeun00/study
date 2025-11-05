@@ -6,9 +6,15 @@ export default function BookmarkPage() {
   const bookmark = useAtomValue(bookmarkAtom);
   return (
     <div>
-      <div className="box_content-heading">save box</div>
+      <div className="box_content-heading"></div>
       {bookmark.length > 0 ? (
         <div className="box_result">
+          <div className="box_result-option">
+            <p className="totalCount">
+              <b>Total Count</b>
+              {bookmark.length} movies.
+            </p>
+          </div>
           <ul className="list_results">
             {bookmark.map((item, i) => (
               <SearchItem item={item} key={i} />

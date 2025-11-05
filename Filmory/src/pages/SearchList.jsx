@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import OptionFilter from "../components/OptionFilter";
 import SearchItem from "../components/SearchItem";
-import { useMovieAPI } from "../api/useMovieAPI";
+import { useKmdbAPI } from "../api/useMovieAPI";
 
 export default function SearchPage() {
-  const { searchMovies } = useMovieAPI();
+  const { searchMovies } = useKmdbAPI();
 
   const searchOption = [
     { name: "통합검색", option: "query" },
@@ -51,21 +51,29 @@ export default function SearchPage() {
 
   return (
     <div>
-      <div className="box_content-heading">
-        <form onSubmit={handleSubmit} role="search" className="box_search">
-          <OptionFilter option={searchOption} setState={setSearchCategory} />
-          <div className="box_input">
-            <span className="material-symbols-outlined icon">search</span>
-            <input id="search-input" className="form_input" name="search" type="search" placeholder="검색어를 입력하세요" autoComplete="off" />
+      <div className="box_header">
+        <h1 className="logo">f.</h1>
+        <form onSubmit={handleSubmit} role="search" class="from_search">
+          <div className="box_search">
+            <div className="box_input">
+              <OptionFilter option={searchOption} setState={setSearchCategory} />
+              <span className="material-symbols-outlined icon">search</span>
+              <input id="search-input" className="form_input" name="search" type="search" placeholder="검색어를 입력하세요" autoComplete="off" />
+            </div>
+            <button type="submit" className="button_submit">
+              submit
+            </button>
           </div>
-          <button type="submit" className="button_submit">
-            submit
-          </button>
         </form>
-        <OptionFilter option={sortOption} setState={setSort} />
       </div>
       <div className="box_result">
-        <p className="totalCount">total: {totalCount}</p>
+        <div className="box_result-option">
+          <p className="totalCount">
+            <b>Total Count</b>
+            {totalCount} movies.
+          </p>
+          <OptionFilter option={sortOption} setState={setSort} />
+        </div>
         <ul className="list_results">
           {results.map((item, i) => (
             <SearchItem item={item} key={i} typeLabel />
@@ -85,19 +93,23 @@ export default function SearchPage() {
                   fetchData(next);
                 }}
               >
-                더보기
+                more
               </button>
             </>
           ) : (
-            <button
-              className="button_more"
-              onClick={() => {
-                setPage(0);
-                fetchData(0);
-              }}
-            >
-              접기
-            </button>
+            <>
+              {totalCount > 10 && (
+                <button
+                  className="button_more"
+                  onClick={() => {
+                    setPage(0);
+                    fetchData(0);
+                  }}
+                >
+                  접기
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>

@@ -51,7 +51,9 @@ const SearchItem = ({ item, typeLabel, type }) => {
             <p className="text_title" dangerouslySetInnerHTML={{ __html: highlightHS(item.title) }} />
             <p className="text_title-sub" dangerouslySetInnerHTML={{ __html: highlightHS(item.titleEng) }} />
             <p className="text_detail">
-              <span className="text_num">{item.prodYear}</span>
+              <span className="text_num">
+                <b>{item.prodYear}</b>
+              </span>
               <span className="text_num text_director" dangerouslySetInnerHTML={{ __html: highlightHS(item.directors) }} />
             </p>
           </div>

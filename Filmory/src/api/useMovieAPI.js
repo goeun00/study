@@ -1,15 +1,29 @@
 import { useState, useRef } from "react";
 import axios from "axios";
 
-export const useMovieAPI = () => {
+export const useKobisAPI = () => {
+  const KobisKey = import.meta.env.VITE_KobisKey;
+  const KobisUrl = `https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${KobisKey}`;
+
+  /* 데일리 박스오피스 */
+  const dailyBoxOffice = async (date) => {
+    const kobisRes = await axios.get(KobisUrl + `&repNationCd=&targetDt=${date}`);
+    const movieList = kobisRes.data.boxOfficeResult.dailyBoxOfficeList;
+    return movieList;
+  };
+  return { dailyBoxOffice };
+};
+
+// 영화 상세 정보 api
+export const useKmdbAPI = () => {
   const ServiceKey = import.meta.env.VITE_ServiceKey;
-  const koreafilmUrl = `https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=${ServiceKey}&ratedYn=y`;
+  const kmdbUrl = `https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=${ServiceKey}&ratedYn=y`;
 
   const cache = useRef(new Map());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  /**  공통 영화 데이터  */
+  /*  공통 영화 데이터  */
   const parseMovie = (movie) => {
     const directors = movie.directors?.director?.map((d) => d.directorNm).join(", ") || "";
     const actors = movie.actors?.actor?.map((a) => a.actorNm).join(", ") || "";
@@ -23,14 +37,13 @@ export const useMovieAPI = () => {
       stllsUrl,
     };
   };
-
   const normalize = (str) =>
     str
       .replace(/ !HS | !HE /g, "")
       .replace(/\s+/g, "")
       .toLowerCase() || "";
 
-  //  검색 타입 및 정렬 정확도
+  /*  검색 타입 및 정렬 정확도 */
   const getMatchMeta = (movie, keyword) => {
     const title = movie.title || "";
     const titleOrg = movie.titleOrg || "";
@@ -51,7 +64,7 @@ export const useMovieAPI = () => {
       setLoading(true);
       const cacheKey = `${keyword}-${sort}-${searchCategory}-${pageNum}`;
       if (cache.current.has(cacheKey)) return cache.current.get(cacheKey);
-      const res = await axios.get(koreafilmUrl + `&sort=${sort}&ratedYn=y&listCount=10&startCount=${pageNum * 10}&${searchCategory}=${encodeURIComponent(keyword)}`);
+      const res = await axios.get(kmdbUrl + `&sort=${sort}&ratedYn=y&listCount=10&startCount=${pageNum * 10}&${searchCategory}=${encodeURIComponent(keyword)}`);
       const results = res.data?.Data?.[0]?.Result || [];
       const total = res.data?.TotalCount || 0;
       const parsed = results
@@ -76,7 +89,7 @@ export const useMovieAPI = () => {
     try {
       setLoading(true);
       const promises = bookmarkList.map(async (seq) => {
-        const res = await axios.get(koreafilmUrl + `&movieSeq=${seq}`);
+        const res = await axios.get(kmdbUrl + `&movieSeq=${seq}`);
         const movie = res.data.Data[0].Result[0];
         return movie ? parseMovie(movie) : null;
       });
@@ -94,7 +107,7 @@ export const useMovieAPI = () => {
   /* title+releaseDate 기반 호출용 */
   const fetchMovieDetail = async (title, releaseDate) => {
     try {
-      const res = await axios.get(koreafilmUrl + `&releaseDts=${releaseDate}&title=${encodeURIComponent(title)}`.replace(/\s+/g, ""));
+      const res = await axios.get(kmdbUrl + `&releaseDts=${releaseDate}&title=${encodeURIComponent(title)}`.replace(/\s+/g, ""));
       const movie = res.data.Data[0].Result[0];
       return movie ? parseMovie(movie) : null;
     } catch (err) {

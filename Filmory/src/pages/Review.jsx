@@ -2,11 +2,11 @@ import { useAtomValue } from "jotai";
 import { reviewAtom } from "../atom/atom";
 import { useEffect, useState } from "react";
 import SearchItem from "../components/SearchItem";
-import { useMovieAPI } from "../api/useMovieAPI";
+import { useKmdbAPI } from "../api/useMovieAPI";
 
 export default function BookmarkPage() {
   const review = useAtomValue(reviewAtom);
-  const { fetchBookmarks, loading } = useMovieAPI();
+  const { fetchBookmarks, loading } = useKmdbAPI();
   const [results, setResults] = useState([]);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function BookmarkPage() {
 
   return (
     <div>
-      <div className="box_content-heading">save box</div>
+      <div className="box_content-heading">review{results.length}</div>
       {loading ? (
         <p>로딩중...</p>
       ) : (
