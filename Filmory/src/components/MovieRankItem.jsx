@@ -2,14 +2,14 @@ const MovieRankItem = ({ item, isExpanded, onExpand }) => {
   return (
     <div className="box_item">
       <p className="text_rank">{String(item.rank).padStart(2, "0")}</p>
-      <a href="#" className="link" onClick={onExpand}>
+      <span className="link" onClick={onExpand}>
         <div className={"box_thumnail" + (isExpanded ? " box-expand" : "")}>
           <button type="button" className="button_expand">
             {!isExpanded ? <span className="icon material-symbols-outlined">expand_content</span> : <span className="icon material-symbols-outlined">collapse_content</span>}
           </button>
           {item.posterUrl ? <img src={item.posterUrl} alt={item.title} className="image_poster" /> : <div className="image_poster"></div>}
         </div>
-      </a>
+      </span>
       <a
         href="#"
         className="link"

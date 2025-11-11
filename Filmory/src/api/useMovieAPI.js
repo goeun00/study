@@ -47,12 +47,14 @@ export const useKmdbAPI = () => {
   const getMatchMeta = (movie, keyword) => {
     const title = movie.title || "";
     const titleOrg = movie.titleOrg || "";
+    const company = movie.company || "";
     const directors = movie.directors?.director?.map((d) => d.directorNm).join(", ") || "";
     const actors = movie.actors?.actor?.map((a) => a.actorNm).join(", ") || "";
 
-    if (normalize(title).includes(keyword) || normalize(titleOrg).includes(keyword)) return { matchType: "title", score: 3 };
-    if (normalize(directors).includes(keyword)) return { matchType: "director", score: 2 };
-    if (normalize(actors).includes(keyword)) return { matchType: "actor", score: 1 };
+    if (normalize(title).includes(keyword) || normalize(titleOrg).includes(keyword)) return { matchType: "title", score: 100 };
+    if (normalize(directors).includes(keyword)) return { matchType: "director", score: 90 };
+    if (normalize(actors).includes(keyword)) return { matchType: "actor", score: 80 };
+    if (normalize(company).includes(keyword)) return { matchType: "company", score: 70 };
 
     return { matchType: "etc", score: 0 };
   };
@@ -84,17 +86,18 @@ export const useKmdbAPI = () => {
   };
 
   /* movieSeq 기반 호출용 */
-  const fetchBookmarks = async (bookmarkList) => {
-    if (!bookmarkList.length) return [];
+  const fetchBookmarks = async ([movieId, movieSeq]) => {
+    const cacheKey = `${movieId}-${movieSeq}`;
+    if (cache.current.has(cacheKey)) {
+      return cache.current.get(cacheKey);
+    }
     try {
       setLoading(true);
-      const promises = bookmarkList.map(async (seq) => {
-        const res = await axios.get(kmdbUrl + `&movieSeq=${seq}`);
-        const movie = res.data.Data[0].Result[0];
-        return movie ? parseMovie(movie) : null;
-      });
-      const results = (await Promise.all(promises)).filter(Boolean);
-      return results;
+      const res = await axios.get(kmdbUrl + `&movieId=${movieId}&movieSeq=${movieSeq}`);
+      const movie = res.data.Data[0].Result[0];
+      const parsed = movie ? [parseMovie(movie)] : [];
+      cache.current.set(cacheKey, parsed);
+      return parsed;
     } catch (err) {
       setError(err);
       console.error("🚨 error:", err);

@@ -28,7 +28,9 @@
     transition: 0.2s;
     flex-shrink: 0;
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.3), 0 0 12px rgba(176, 138, 138, 0.2);
-    cursor: pointer;
+    a {
+      color: var(--color-text-primary);
+    }
     .icon {
       font-size: 18px;
       line-height: 24px;

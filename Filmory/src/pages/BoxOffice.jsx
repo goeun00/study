@@ -4,7 +4,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import MovieRankItem from "../components/MovieRankItem";
 import { useKobisAPI, useKmdbAPI } from "../api/useMovieAPI";
-
+import backVideo from "../assets/video/back.mp4";
 export default function BoxOffice() {
   const { fetchMovieDetail } = useKmdbAPI();
   const { dailyBoxOffice } = useKobisAPI();
@@ -80,38 +80,46 @@ export default function BoxOffice() {
     return <div className="error">{error.message}</div>;
   }
   return (
-    <div className="box_content">
-      <div className="box_content-heading">
-        <h2 className="text_heading1">
-          <span> {formatDate(date).slice(0, 4)}</span>
-          <span className="text">Daily Box Office</span>
-        </h2>
-        <div className="box_calendar">
-          <Calendar onChange={handleDateChange} value={date} maxDate={today} minDate={new Date(2003, 10, 12)} locale="en-US" calendarType="gregory" formatMonthYear={(locale, date) => date.toLocaleDateString("en-US", { month: "short" })} />
-        </div>
+    <>
+      <div className="box_main">
+        <video autoPlay muted loop playsInline className="video" poster="../assets/image/backgroud.png">
+          <source src={backVideo} type="video/mp4" />
+        </video>
+        <p className="text_title">Filmory</p>
       </div>
-      <div className="box_date">
-        <button className="button" type="button" onClick={() => changeDay("prev")}>
-          <span className="material-symbols-outlined">keyboard_arrow_left</span>
-        </button>
-        <span className="text_date">{monthDate} </span>
-        {!isNextDisabled && (
-          <button className="button" type="button" onClick={() => changeDay("next")}>
-            <span className="material-symbols-outlined">keyboard_arrow_right</span>
+      <div className="box_content">
+        <div className="box_content-heading">
+          <h2 className="text_heading1">
+            <span> {formatDate(date).slice(0, 4)}</span>
+            <span className="text">Daily Box Office</span>
+          </h2>
+          <div className="box_calendar">
+            <Calendar onChange={handleDateChange} value={date} activeStartDate={date} maxDate={today} minDate={new Date(2003, 10, 12)} locale="en-US" calendarType="gregory" formatMonthYear={(locale, date) => date.toLocaleDateString("en-US", { month: "short" })} />
+          </div>
+        </div>
+        <div className="box_date">
+          <button className="button" type="button" onClick={() => changeDay("prev")}>
+            <span className="material-symbols-outlined">keyboard_arrow_left</span>
           </button>
+          <span className="text_date">{monthDate} </span>
+          {!isNextDisabled && (
+            <button className="button" type="button" onClick={() => changeDay("next")}>
+              <span className="material-symbols-outlined">keyboard_arrow_right</span>
+            </button>
+          )}
+        </div>
+        {loading ? (
+          <div className="loading list_box-office">Loading...</div>
+        ) : (
+          <Swiper wrapperTag="ul" className={`list_box-office ${fade ? "fade-out" : "fade-in"}`} slidesPerView={"auto"}>
+            {movies?.map((movie, idx) => (
+              <SwiperSlide key={movie.rnum} className="list-item" tag="li">
+                <MovieRankItem item={movie} isExpanded={expandedIdx === idx} onExpand={() => handleExpand(idx)} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
         )}
       </div>
-      {loading ? (
-        <div className="loading list_box-office">Loading...</div>
-      ) : (
-        <Swiper wrapperTag="ul" className={`list_box-office ${fade ? "fade-out" : "fade-in"}`} slidesPerView={"auto"}>
-          {movies?.map((movie, idx) => (
-            <SwiperSlide key={movie.rnum} className="list-item" tag="li">
-              <MovieRankItem item={movie} isExpanded={expandedIdx === idx} onExpand={() => handleExpand(idx)} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      )}
-    </div>
+    </>
   );
 }

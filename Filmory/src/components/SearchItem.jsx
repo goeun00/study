@@ -1,5 +1,6 @@
 import { useAtom } from "jotai";
 import { bookmarkAtom } from "../atom/atom";
+import { Link } from "react-router-dom";
 
 const SearchItem = ({ item, typeLabel, type }) => {
   const [bookmark, setBookmark] = useAtom(bookmarkAtom);
@@ -15,6 +16,7 @@ const SearchItem = ({ item, typeLabel, type }) => {
         ...prev,
         {
           movieSeq: movie.movieSeq,
+          movieId: movie.movieId,
           title: movie.title,
           posterUrl: movie.posterUrl,
           prodYear: movie.prodYear,
@@ -41,7 +43,7 @@ const SearchItem = ({ item, typeLabel, type }) => {
       >
         <span className="material-symbols-outlined icon">bookmark</span>
       </button>
-      <a href={`https://search.naver.com/search.naver?&query=영화${item.title.replace(/ !HS | !HE /g, "")}`} target="_blank">
+      <Link to={`/movie/${item.movieId}/${item.movieSeq}`}>
         <div className="box_item">
           <div className="box_thumnail">
             {typeLabel && <span className="box_type-label">{item.matchType}</span>}
@@ -58,7 +60,7 @@ const SearchItem = ({ item, typeLabel, type }) => {
             </p>
           </div>
         </div>
-      </a>
+      </Link>
     </li>
   );
 };

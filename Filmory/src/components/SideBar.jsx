@@ -8,22 +8,17 @@ const SideBar = ({ nav }) => {
       className={`box_sidebar ${menuOpen ? "active" : ""}`}
       tabIndex={0}
       onFocus={() => setMenuOpen(true)}
-      onBlur={() => setMenuOpen(false)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          setMenuOpen(false);
+        }
+      }}
     >
-      <button className="button_menu">
-        {!menuOpen ? (
-          <span className="material-symbols-outlined icon">menu</span>
-        ) : (
-          "Filmory."
-        )}
-      </button>
+      <span className="button_menu">{!menuOpen ? <span className="material-symbols-outlined icon">menu</span> : <NavLink to="/">Filmory.</NavLink>}</span>
       <ul className="list">
         {nav.map((item) => (
           <li className="list-item" key={item.to}>
-            <NavLink
-              to={item.to}
-              className={({ isActive }) => `link ${isActive ? "active" : ""}`}
-            >
+            <NavLink to={item.to} className={({ isActive }) => `link ${isActive ? "active" : ""}`}>
               {item.name}
             </NavLink>
           </li>

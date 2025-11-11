@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import OptionFilter from "../components/OptionFilter";
 import SearchItem from "../components/SearchItem";
 import { useKmdbAPI } from "../api/useMovieAPI";
+import { Link } from "react-router-dom";
 
 export default function SearchPage() {
   const { searchMovies } = useKmdbAPI();
@@ -14,7 +15,7 @@ export default function SearchPage() {
   ];
   const [searchCategory, setSearchCategory] = useState(searchOption[0].option);
 
-  const [query, setQuery] = useState("공효진");
+  const [query, setQuery] = useState(() => localStorage.getItem("query") || "공효진");
   const [results, setResults] = useState([]);
   const [totalCount, setTotalCount] = useState();
   const [page, setPage] = useState(0);
@@ -33,6 +34,7 @@ export default function SearchPage() {
     const value = e.target.search.value.trim();
     if (!value) return;
     setPage(0);
+    localStorage.setItem("query", value);
     setQuery(value);
   };
 
@@ -52,7 +54,9 @@ export default function SearchPage() {
   return (
     <div>
       <div className="box_header">
-        <h1 className="logo">f.</h1>
+        <h1 className="logo">
+          <Link to="/">f.</Link>
+        </h1>
         <form onSubmit={handleSubmit} role="search" class="from_search">
           <div className="box_search">
             <div className="box_input">
@@ -80,22 +84,20 @@ export default function SearchPage() {
           ))}
         </ul>
         <div className="box_pagination">
+          <p className="pagination-label">
+            {page + 1} / {Math.ceil(totalCount / 10)}
+          </p>
           {results.length < totalCount ? (
-            <>
-              <p className="pagination-label">
-                {page + 1} / {Math.ceil(totalCount / 10)}
-              </p>
-              <button
-                className="button_more"
-                onClick={() => {
-                  const next = page + 1;
-                  setPage(next);
-                  fetchData(next);
-                }}
-              >
-                more
-              </button>
-            </>
+            <button
+              className="button_more"
+              onClick={() => {
+                const next = page + 1;
+                setPage(next);
+                fetchData(next);
+              }}
+            >
+              more<span className="material-symbols-outlined">keyboard_arrow_down</span>
+            </button>
           ) : (
             <>
               {totalCount > 10 && (
@@ -106,7 +108,7 @@ export default function SearchPage() {
                     fetchData(0);
                   }}
                 >
-                  접기
+                  more<span className="material-symbols-outlined">keyboard_arrow_up</span>
                 </button>
               )}
             </>
