@@ -27,7 +27,7 @@ export const useKmdbAPI = () => {
   const parseMovie = (movie) => {
     const directors = movie.directors?.director?.map((d) => d.directorNm).join(", ") || "";
     const actors = movie.actors?.actor?.map((a) => a.actorNm).join(", ") || "";
-    const posterUrl = movie.posters?.split("|")[0] || movie.stlls?.split("|")[0] || "";
+    const posterUrl = movie.posterUrl || movie.posters?.split("|")[0] || movie.stlls?.split("|")[0] || "";
     const stllsUrl = movie.stlls?.split("|")[0] || "";
     return {
       ...movie,

@@ -1,10 +1,11 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import MovieRankItem from "../components/MovieRankItem";
+import ListItem from "../components/ListItem";
+import MainVisual from "../components/MainVisual";
 import { useKobisAPI, useKmdbAPI } from "../api/useMovieAPI";
-import backVideo from "../assets/video/back.mp4";
+
 export default function BoxOffice() {
   const { fetchMovieDetail } = useKmdbAPI();
   const { dailyBoxOffice } = useKobisAPI();
@@ -16,7 +17,7 @@ export default function BoxOffice() {
   }, []);
 
   const [date, setDate] = useState(today);
-
+  const [calendarStart, setCalendarStart] = useState(today);
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fade, setFade] = useState(false);
@@ -37,6 +38,7 @@ export default function BoxOffice() {
       const newDate = new Date(prev);
       const offset = direction === "next" ? 1 : -1;
       newDate.setDate(prev.getDate() + offset);
+      setCalendarStart(newDate);
       return newDate;
     });
   };
@@ -50,6 +52,14 @@ export default function BoxOffice() {
     setExpandedIdx((prev) => (prev === idx ? null : idx));
   };
 
+  const swiperRef = useRef(null);
+
+  useEffect(() => {
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(0, 0);
+    }
+  }, [movies]);
+
   useEffect(() => {
     const fetchMovies = async () => {
       setFade(true);
@@ -60,8 +70,12 @@ export default function BoxOffice() {
             const openDt = movie.openDt.replaceAll("-", "") || "";
             const dateNum = Number(openDt);
             const dateRange = [dateNum - 2, dateNum, dateNum + 2].map(String).join(",");
-            const { posterUrl, titleEng } = await fetchMovieDetail(movie.movieNm, dateRange);
-            return { ...movie, posterUrl, titleEng, title: movie.movieNm };
+            const detail = await fetchMovieDetail(movie.movieNm, dateRange);
+            return {
+              ...movie,
+              ...detail,
+              title: movie.movieNm,
+            };
           })
         );
         setMovies(moviesDetail);
@@ -76,17 +90,9 @@ export default function BoxOffice() {
     fetchMovies();
   }, [date]);
 
-  if (error) {
-    return <div className="error">{error.message}</div>;
-  }
   return (
     <>
-      <div className="box_main">
-        <video autoPlay muted loop playsInline className="video" poster="../assets/image/backgroud.png">
-          <source src={backVideo} type="video/mp4" />
-        </video>
-        <p className="text_title">Filmory</p>
-      </div>
+      <MainVisual data={formatMonthFull(today) + ", " + formatDate(today).slice(0, 4)} />
       <div className="box_content">
         <div className="box_content-heading">
           <h2 className="text_heading1">
@@ -94,12 +100,12 @@ export default function BoxOffice() {
             <span className="text">Daily Box Office</span>
           </h2>
           <div className="box_calendar">
-            <Calendar onChange={handleDateChange} value={date} activeStartDate={date} maxDate={today} minDate={new Date(2003, 10, 12)} locale="en-US" calendarType="gregory" formatMonthYear={(locale, date) => date.toLocaleDateString("en-US", { month: "short" })} />
+            <Calendar onChange={handleDateChange} value={date} activeStartDate={calendarStart} onActiveStartDateChange={({ activeStartDate }) => setCalendarStart(activeStartDate)} maxDate={today} minDate={new Date(2003, 10, 12)} locale="en-US" calendarType="gregory" formatMonthYear={(locale, date) => date.toLocaleDateString("en-US", { month: "short" })} />
           </div>
         </div>
         <div className="box_date">
           <button className="button" type="button" onClick={() => changeDay("prev")}>
-            <span className="material-symbols-outlined">keyboard_arrow_left</span>
+            <span className="material-symbols-outlined icon">keyboard_arrow_left</span>
           </button>
           <span className="text_date">{monthDate} </span>
           {!isNextDisabled && (
@@ -111,13 +117,19 @@ export default function BoxOffice() {
         {loading ? (
           <div className="loading list_box-office">Loading...</div>
         ) : (
-          <Swiper wrapperTag="ul" className={`list_box-office ${fade ? "fade-out" : "fade-in"}`} slidesPerView={"auto"}>
-            {movies?.map((movie, idx) => (
-              <SwiperSlide key={movie.rnum} className="list-item" tag="li">
-                <MovieRankItem item={movie} isExpanded={expandedIdx === idx} onExpand={() => handleExpand(idx)} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          <>
+            {error ? (
+              <div className="loading list_box-office">error!</div>
+            ) : (
+              <Swiper wrapperTag="ul" className={`list_box-office ${fade ? "fade-out" : "fade-in"}`} slidesPerView={"auto"} onSwiper={(swiper) => (swiperRef.current = swiper)}>
+                {movies?.map((movie, idx) => (
+                  <SwiperSlide key={movie.rnum} className="list-item" tag="li">
+                    <ListItem type="rank" item={movie} isExpanded={expandedIdx === idx} onExpand={() => handleExpand(idx)} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
+          </>
         )}
       </div>
     </>

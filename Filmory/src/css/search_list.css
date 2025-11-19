@@ -1,6 +1,6 @@
 .box_result {
   max-width: 1680px;
-  margin: 0 auto;
+  margin: 32px auto 0;
   .box_result-option {
     display: flex;
     justify-content: space-between;
@@ -41,10 +41,15 @@
         right: 0;
         margin-top: calc(150% + 10px);
         font-size: 0;
+        width: 25px;
+        height: 25px;
+        text-align: center;
         .icon {
           margin: 0;
           padding: 0;
-          font-size: 21px;
+          font-size: 18px;
+          line-height: 25px;
+          color: var(--color-text-primary);
         }
         &.active {
           .icon {
@@ -58,7 +63,7 @@
         right: 0;
         z-index: 10;
         padding: 5px 10px;
-        background: var(--color-overlay);
+        background: rgba(var(--dimmed-RGB), 0.3);
         font-size: 12px;
         font-weight: 500;
         color: var(--color-white);
@@ -99,27 +104,6 @@
           background-image: url("../assets/image/Noise_Texture.png");
           pointer-events: none;
           filter: contrast(80%);
-        }
-        &.box-expand {
-          &::before {
-            padding-top: 140%;
-          }
-        }
-        .button_expand {
-          opacity: 0.6;
-          position: absolute;
-          right: 0;
-          bottom: 0;
-          z-index: 10;
-          padding: 3px;
-          border-radius: 4px 0 0 0;
-          background: var(--color-overlay);
-          color: var(--color-surface);
-          transition: 0.2s;
-          .icon {
-            font-size: 20px;
-            text-shadow: 0 0 4px var(--color-overlay);
-          }
         }
         &:hover {
           .button_expand {
@@ -189,15 +173,51 @@
         }
       }
       &:hover {
-        .text_rank {
-          opacity: 0.5;
-        }
         .image_poster {
           opacity: 1;
           filter: grayscale(10%) contrast(95%);
         }
         .box_info {
           opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .box_result {
+    .list_results {
+      .list-item {
+        width: calc(25% - 9px);
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .box_result {
+    .box_result-option {
+      padding: 0 16px;
+      margin-top: 16px;
+    }
+    .list_results {
+      padding: 0 16px;
+      gap: 12px 6px;
+      margin-top: 16px;
+      .list-item {
+        width: calc(33% - 4px);
+        .box_info {
+          .text_title {
+            font-size: 15px;
+          }
+          .text_title-sub {
+            font-size: 13px;
+          }
+          .text_detail {
+            font-size: 13px;
+            margin-top: 8px;
+          }
         }
       }
     }

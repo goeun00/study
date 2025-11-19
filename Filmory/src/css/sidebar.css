@@ -5,17 +5,17 @@
   position: fixed;
   top: 50%;
   left: 16px;
-  z-index: 99;
+  z-index: 999;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.08)), rgba(255, 255, 255, 0.25);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(var(--dimmed-RGB), 0.08)), rgba(255, 255, 255, 0.25);
   transition: all 0.3s ease;
   backdrop-filter: blur(18px) saturate(150%);
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2), 0 4px 14px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2), 0 4px 14px rgba(var(--dimmed-RGB), 0.4);
   &:hover {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.08)), rgba(255, 255, 255, 0.3);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(var(--dimmed-RGB), 0.08)), rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
-    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.3), 0 6px 18px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.3), 0 6px 18px rgba(var(--dimmed-RGB), 0.5);
   }
   .button_menu {
     padding: 24px 32px;
@@ -43,31 +43,41 @@
     overflow: hidden;
     opacity: 0;
     max-width: 0;
-    padding: 24px 0;
+    padding: 16px 0;
     transition: all 0.25s ease-in-out;
-    gap: 24px;
+    gap: 32px;
+
     &::before {
       content: "";
       display: inline-block;
       height: 20px;
       vertical-align: top;
       width: 1px;
-      background: var(--color-overlay);
+      background: rgba(var(--dimmed-RGB), 0.3);
     }
     &.active {
       opacity: 1;
-      max-width: 500px; /* 적당한 확장 폭 */
+      max-width: 600px; /* 적당한 확장 폭 */
       padding: 24px;
     }
     .list-item {
-      font-size: 14px;
+      font-size: 13px;
       text-transform: capitalize;
       white-space: nowrap;
+      text-align: center;
+      font-size: 0;
       .link {
         opacity: 0.6;
         color: inherit;
         text-decoration: none;
         transition: all 0.2s ease;
+        font-size: 13px;
+        line-height: 1;
+        .icon {
+          display: block;
+          font-size: 24px;
+          line-height: 1;
+        }
         &:hover {
           opacity: 0.9;
         }

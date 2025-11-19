@@ -1,12 +1,13 @@
 import { useAtomValue } from "jotai";
 import { bookmarkAtom } from "../atom/atom";
-import SearchItem from "../components/SearchItem";
-
+import ListItem from "../components/ListItem";
+import Header from "../components/Header";
+import EmptyMotion from "../components/EmptyMotion";
 export default function BookmarkPage() {
   const bookmark = useAtomValue(bookmarkAtom);
   return (
     <div>
-      <div className="box_content-heading"></div>
+      <Header />
       {bookmark.length > 0 ? (
         <div className="box_result">
           <div className="box_result-option">
@@ -17,12 +18,17 @@ export default function BookmarkPage() {
           </div>
           <ul className="list_results">
             {bookmark.map((item, i) => (
-              <SearchItem item={item} key={i} />
+              <ListItem item={item} key={i} />
             ))}
           </ul>
         </div>
       ) : (
-        <p>저장된 영화가 없습니다 🎬</p>
+        <div className="box_empty-wrap">
+          <div className="box_empty">
+            <EmptyMotion />
+            <p className="text_empty">저장된 영화가 없습니다.</p>
+          </div>
+        </div>
       )}
     </div>
   );

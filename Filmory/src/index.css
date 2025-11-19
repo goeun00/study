@@ -33,39 +33,100 @@ button {
   line-height: inherit;
   vertical-align: top;
   font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24;
+  &.light {
+    line-height: inherit;
+    vertical-align: top;
+    font-variation-settings: "FILL" 0, "wght" 200, "GRAD" 0, "opsz" 24;
+  }
+  &.fill {
+    line-height: inherit;
+    vertical-align: top;
+    font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+  }
 }
+
 html,
 body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  background: var(--color-bg);
+  background-color: var(--color-bg);
+  &:has(.box_container.darkmode) {
+    background-color: #252424;
+  }
 }
 li {
   list-style: none;
 }
-#root {
-  width: 100%;
-  height: 100%;
-}
 
 :root {
   /* 🎬 기본 구조 색상 */
-  --color-bg: #eceae8; /* 페이지 배경 (은은한 회색) */
-  --color-line: #cccac5; /* 구분선용 연한 회색 */
-  --color-line2: #969799; /* 구분선용 연한 회색 */
-  --color-surface: #ebdcdf; /* 카드, 컨테이너 배경 */
-  --color-white: #fff; /* 구분선용 연한 회색 */
+  --color-bg: #eceae8;
+  --color-bg-RGB: 236, 234, 232;
+  --color-line: #cccac5;
+  --color-line2: #969799;
+  --color-surface: #ebdcdf;
+  --color-white: #fff;
   /* 🖤 텍스트 컬러 */
-  --color-text-primary: #3e4149; /* 본문 텍스트 */
-  --color-text-secondary: #636975; /* 부제, 날짜, Audience 등 */
-
+  --color-text-primary: #3e4149;
+  --color-text-secondary: #636975;
   /* 💙 포인트 컬러 */
-  --color-accent-rose: #b08a8f; /* 하이라이트용 (캘린더 날짜 등) */
-  --color-accent-rose-light: rgba(176, 138, 138, 0.2);
-  --color-accent-light: #e8ecff; /* hover or background용 */
+  --color-accent-rose: #b08a8f;
+  --color-accent-rose-light: rgba(176, 138, 138, 0.35);
+  --color-accent-rose-light2: rgba(176, 138, 138, 0.6);
+  --dimmed-RGB: 0, 0, 0;
+  --boxshadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+}
 
-  --color-overlay: rgba(0, 0, 0, 0.3);
-  --color-overlay-light: rgba(255, 255, 255, 0.5);
+.darkmode {
+  --color-bg: #252424;
+  --color-bg-RGB: 26, 26, 26;
+  --color-line: #ffffff6b;
+  --color-line2: #ffffffa6;
+  --color-surface: #2a2a2a;
+  --color-white: #fff;
+  --color-text-primary: #e0e0e0;
+  --color-text-secondary: #a0a0a0;
+  --dimmed-RGB: 255, 255, 255;
+  --boxshadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+}
+
+.darkmode,
+.lightmode {
+  transition: 0.2s;
+}
+#root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.favorite_lottie {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background: rgba(var(--color-bg-RGB), 0.45);
+  backdrop-filter: blur(3px) brightness(90%);
+  box-shadow: var(--boxshadow);
+  padding: 0;
+  border-radius: 50%;
+}
+
+.box_empty-wrap {
+  min-height: calc(100vh - 300px);
+  .box_empty {
+    position: absolute;
+    top: calc(50% - 100px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .text_empty {
+    font-family: "Pretendard Variable", sans-serif;
+    text-align: center;
+    margin-top: -25px;
+    color: var(--color-text-primary);
+  }
 }
