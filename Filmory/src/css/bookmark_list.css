@@ -11,17 +11,17 @@
       color: var(--color-text-primary);
       b {
         &::after {
-          content: "";
-          height: 10px;
-          width: 1px;
           display: inline-block;
-          background: var(--color-line);
+          content: "";
+          width: 1px;
+          height: 10px;
           margin: 0 8px;
+          background: var(--color-line);
         }
       }
     }
   }
-  .list_results {
+  .list_bookmark {
     display: flex;
     flex-wrap: wrap;
     margin-top: 32px;
@@ -30,26 +30,29 @@
     .list-item {
       display: inline-block;
       overflow: hidden;
+      overflow: hidden;
+      position: relative;
       position: relative;
       width: calc(20% - 10px);
+      border-radius: 8px;
       font-size: 14px;
       font-family: "Pretendard Variable", sans-serif;
       vertical-align: top;
       .button_bookmark {
         position: absolute;
-        top: 0;
-        right: 0;
-        margin-top: calc(150% + 10px);
-        font-size: 0;
+        top: 16px;
+        right: 16px;
+        z-index: 100;
         width: 25px;
         height: 25px;
+        font-size: 0;
         text-align: center;
         .icon {
           margin: 0;
           padding: 0;
-          font-size: 18px;
+          font-size: 21px;
+          color: var(--color-white);
           line-height: 25px;
-          color: var(--color-text-primary);
         }
         &.active {
           .icon {
@@ -74,6 +77,7 @@
         position: relative;
         width: 100%;
         border-radius: 4px;
+        background: #535151;
         background-size: 100% 100%;
         .empty {
           opacity: 0.5;
@@ -112,7 +116,7 @@
         }
       }
       .image_poster {
-        opacity: 0.9;
+        opacity: 0.8;
         position: absolute;
         top: 0;
         left: 0;
@@ -120,15 +124,31 @@
         height: 100%;
         transition: all 0.2s ease-in-out;
         object-fit: cover;
-        filter: grayscale(100%) contrast(65%);
+        filter: grayscale(100%) contrast(60%);
       }
       .box_info {
-        opacity: 0.8;
+        opacity: 1;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
         margin-top: 12px;
-        color: var(--color-text-primary);
+        padding: 24px;
+        color: var(--color-white);
         line-height: 1.25;
+        transition: 0.2s;
         white-space: wrap;
-
+        &::before {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 150px;
+          border-radius: 8px;
+          background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.35) 50%, rgba(0, 0, 0, 0) 100%);
+          pointer-events: none;
+        }
         .box__highlight {
           position: relative;
           &::before {
@@ -145,19 +165,21 @@
           }
         }
         .text_title {
-          max-width: calc(100% - 22px);
-          font-size: 17px;
+          position: relative;
+          font-size: 20px;
           font-weight: 600;
           letter-spacing: -0.5px;
         }
         .text_title-sub {
           opacity: 0.8;
+          position: relative;
           margin-top: 3px;
           font-size: 14px;
         }
         .text_detail {
           display: -webkit-box;
           overflow: hidden;
+          position: relative;
           margin-top: 12px;
           font-size: 13px;
           line-height: 1;
@@ -178,7 +200,7 @@
           filter: grayscale(10%) contrast(95%);
         }
         .box_info {
-          opacity: 1;
+          opacity: 0;
         }
       }
     }
@@ -198,13 +220,13 @@
 @media screen and (max-width: 425px) {
   .box_result {
     .box_result-option {
-      padding: 0 16px;
       margin-top: 16px;
+      padding: 0 16px;
     }
     .list_results {
+      margin-top: 16px;
       padding: 0 16px;
       gap: 12px 6px;
-      margin-top: 16px;
       .list-item {
         width: calc(50% - 3px);
         .box_info {
@@ -215,8 +237,8 @@
             font-size: 13px;
           }
           .text_detail {
-            font-size: 13px;
             margin-top: 8px;
+            font-size: 13px;
           }
         }
       }

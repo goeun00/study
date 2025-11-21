@@ -16,7 +16,7 @@ export default function BookmarkPage() {
               {bookmark.length} movies.
             </p>
           </div>
-          <ul className="list_results">
+          <ul className="list_bookmark">
             {bookmark.map((item, i) => (
               <ListItem item={item} key={i} />
             ))}
